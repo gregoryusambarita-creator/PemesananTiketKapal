@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Jadwal;
 use App\Models\Pemesanan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PemesananController extends Controller
 {
@@ -26,24 +27,54 @@ class PemesananController extends Controller
 
     public function store(Request $request)
     {
-        $jadwal = Jadwal::with('rute')
-            ->findOrFail($request->jadwal_id);
-
-        $totalHarga = $jadwal->rute->harga * $request->jumlah_tiket;
-
-        Pemesanan::create([
-            'jadwal_id' => $request->jadwal_id,
-            'nama_penumpang' => $request->nama_penumpang,
-            'nik' => $request->nik,
-            'telepon' => $request->telepon,
-            'jumlah_tiket' => $request->jumlah_tiket,
-            'total_harga' => $totalHarga,
-            'status' => 'Menunggu'
+        $request->validate([
+            'jadwal_id' => 'required',
+            'nama_penumpang' => 'required',
+            'nik' => 'required',
+            'telepon' => 'required',
+            'jumlah_tiket' => 'required|integer|min:1'
         ]);
 
-        return redirect()
-            ->route('pemesanan.index')
-            ->with('success', 'Pemesanan berhasil ditambahkan');
+        DB::beginTransaction();
+
+        try {
+
+            $jadwal = Jadwal::with('rute')->findOrFail($request->jadwal_id);
+
+            if ($request->jumlah_tiket > $jadwal->stok_tiket) {
+                return back()
+                    ->withInput()
+                    ->with('error', 'Stok tiket tidak mencukupi.');
+            }
+
+            $totalHarga = $jadwal->rute->harga * $request->jumlah_tiket;
+
+            Pemesanan::create([
+                'jadwal_id' => $request->jadwal_id,
+                'nama_penumpang' => $request->nama_penumpang,
+                'nik' => $request->nik,
+                'telepon' => $request->telepon,
+                'jumlah_tiket' => $request->jumlah_tiket,
+                'total_harga' => $totalHarga,
+                'status' => 'Menunggu'
+            ]);
+
+            // Kurangi stok tiket
+            $jadwal->stok_tiket -= $request->jumlah_tiket;
+            $jadwal->save();
+
+            DB::commit();
+
+            return redirect()
+                ->route('pemesanan.index')
+                ->with('success', 'Pemesanan berhasil ditambahkan');
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     public function show(Pemesanan $pemesanan)
@@ -63,28 +94,71 @@ class PemesananController extends Controller
 
     public function update(Request $request, Pemesanan $pemesanan)
     {
-        $jadwal = Jadwal::with('rute')
-            ->findOrFail($request->jadwal_id);
-
-        $totalHarga = $jadwal->rute->harga * $request->jumlah_tiket;
-
-        $pemesanan->update([
-            'jadwal_id' => $request->jadwal_id,
-            'nama_penumpang' => $request->nama_penumpang,
-            'nik' => $request->nik,
-            'telepon' => $request->telepon,
-            'jumlah_tiket' => $request->jumlah_tiket,
-            'total_harga' => $totalHarga,
-            'status' => $request->status
+        $request->validate([
+            'jadwal_id' => 'required',
+            'nama_penumpang' => 'required',
+            'nik' => 'required',
+            'telepon' => 'required',
+            'jumlah_tiket' => 'required|integer|min:1',
+            'status' => 'required'
         ]);
 
-        return redirect()
-            ->route('pemesanan.index')
-            ->with('success', 'Pemesanan berhasil diubah');
+        DB::beginTransaction();
+
+        try {
+
+            $jadwal = Jadwal::with('rute')->findOrFail($request->jadwal_id);
+
+            // Kembalikan stok lama
+            $jadwal->stok_tiket += $pemesanan->jumlah_tiket;
+
+            // Cek stok setelah dikembalikan
+            if ($request->jumlah_tiket > $jadwal->stok_tiket) {
+                return back()
+                    ->withInput()
+                    ->with('error', 'Stok tiket tidak mencukupi.');
+            }
+
+            $totalHarga = $jadwal->rute->harga * $request->jumlah_tiket;
+
+            $pemesanan->update([
+                'jadwal_id' => $request->jadwal_id,
+                'nama_penumpang' => $request->nama_penumpang,
+                'nik' => $request->nik,
+                'telepon' => $request->telepon,
+                'jumlah_tiket' => $request->jumlah_tiket,
+                'total_harga' => $totalHarga,
+                'status' => $request->status
+            ]);
+
+            // Kurangi stok baru
+            $jadwal->stok_tiket -= $request->jumlah_tiket;
+            $jadwal->save();
+
+            DB::commit();
+
+            return redirect()
+                ->route('pemesanan.index')
+                ->with('success', 'Pemesanan berhasil diubah');
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     public function destroy(Pemesanan $pemesanan)
     {
+        // Kembalikan stok tiket
+        $jadwal = Jadwal::find($pemesanan->jadwal_id);
+
+        if ($jadwal) {
+            $jadwal->stok_tiket += $pemesanan->jumlah_tiket;
+            $jadwal->save();
+        }
+
         $pemesanan->delete();
 
         return redirect()
