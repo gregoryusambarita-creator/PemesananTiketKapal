@@ -6,185 +6,67 @@
 
 <div class="container-fluid">
 
-```
-<!-- Banner -->
-<div class="card border-0 shadow-sm mb-4"
-     style="background:linear-gradient(135deg,#0f172a,#2563eb); border-radius:20px;">
+    <!-- Hero -->
+    <div class="card border-0 shadow-lg mb-4 overflow-hidden"
+        style="border-radius:22px;
+        background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 55%,#2563eb 100%);">
 
-    <div class="card-body text-white p-4">
+        <div class="card-body p-5">
 
-        <h2 class="fw-bold mb-2">
-            🚢 Sistem Pemesanan Tiket Kapal Ferry
-        </h2>
+            <div class="row align-items-center">
 
-        <h5 class="mb-3">
-            Rute Ajibata - Tomok
-        </h5>
+                <div class="col-lg-8">
 
-        <p class="mb-0">
-            Selamat datang, <strong>{{ Auth::user()->name }}</strong>.
-            Kelola data kapal, jadwal keberangkatan, pemesanan tiket,
-            pembayaran dan laporan melalui dashboard ini.
-        </p>
+                    <span class="badge bg-light text-primary px-3 py-2 mb-3">
+                        Dashboard Administrator
+                    </span>
 
-    </div>
-</div>
+                    <h2 class="fw-bold text-white mb-3">
+                        🚢 Sistem Pemesanan Tiket Kapal Ferry
+                    </h2>
 
-<!-- Statistik -->
-<div class="row">
+                    <h5 class="text-light mb-4">
+                        Pelabuhan Ajibata — Tomok
+                    </h5>
 
-    <div class="col-md-3 mb-4">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body text-center">
+                    <p class="text-white-50 mb-4">
 
-                <div class="mb-2">
-                    <i class="fas fa-ship fa-2x text-primary"></i>
+                        Selamat datang
+                        <strong class="text-white">
+                            {{ Auth::user()->name }}
+                        </strong>
+
+                        di Sistem Pemesanan Tiket Kapal Ferry.
+
+                        Kelola kapal, rute, jadwal keberangkatan,
+                        transaksi pemesanan, pembayaran,
+                        serta laporan operasional secara real-time.
+
+                    </p>
+
+                    <div class="d-flex flex-wrap gap-2">
+
+                        <span class="badge bg-primary p-2">
+                            {{ date('d F Y') }}
+                        </span>
+
+                        <span class="badge bg-success p-2">
+                            Sistem Online
+                        </span>
+
+                        <span class="badge bg-warning text-dark p-2">
+                            {{ strtoupper(Auth::user()->role) }}
+                        </span>
+
+                    </div>
+
                 </div>
 
-                <h6 class="text-muted">Total Kapal</h6>
+                <div class="col-lg-4 text-center">
 
-                <h2 class="fw-bold text-primary">
-                    {{ $totalKapal }}
-                </h2>
+                    <i class="fas fa-ship text-white"
+                       style="font-size:130px;opacity:.15;"></i>
 
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3 mb-4">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body text-center">
-
-                <div class="mb-2">
-                    <i class="fas fa-route fa-2x text-success"></i>
-                </div>
-
-                <h6 class="text-muted">Total Rute</h6>
-
-                <h2 class="fw-bold text-success">
-                    {{ $totalRute }}
-                </h2>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3 mb-4">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body text-center">
-
-                <div class="mb-2">
-                    <i class="fas fa-calendar-alt fa-2x text-warning"></i>
-                </div>
-
-                <h6 class="text-muted">Total Jadwal</h6>
-
-                <h2 class="fw-bold text-warning">
-                    {{ $totalJadwal }}
-                </h2>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3 mb-4">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body text-center">
-
-                <div class="mb-2">
-                    <i class="fas fa-ticket-alt fa-2x text-danger"></i>
-                </div>
-
-                <h6 class="text-muted">Total Pemesanan</h6>
-
-                <h2 class="fw-bold text-danger">
-                    {{ $totalPemesanan }}
-                </h2>
-
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<!-- Pendapatan -->
-<div class="card border-0 shadow-sm mb-4">
-
-    <div class="card-body text-center p-4">
-
-        <i class="fas fa-money-bill-wave fa-3x text-success mb-3"></i>
-
-        <h5 class="text-muted">
-            Total Pendapatan
-        </h5>
-
-        <h1 class="fw-bold text-success">
-            Rp {{ number_format($totalPendapatan,0,',','.') }}
-        </h1>
-
-    </div>
-
-</div>
-
-<!-- Informasi Sistem -->
-<div class="row">
-
-    <div class="col-md-6 mb-4">
-
-        <div class="card border-0 shadow-sm h-100">
-
-            <div class="card-header bg-primary text-white">
-                Informasi Sistem
-            </div>
-
-            <div class="card-body">
-
-                <ul class="list-group list-group-flush">
-
-                    <li class="list-group-item">
-                        🚢 Pemesanan Tiket Kapal Ferry
-                    </li>
-
-                    <li class="list-group-item">
-                        📍 Rute Ajibata - Tomok - Ajibata
-                    </li>
-
-                    <li class="list-group-item">
-                        👤 Login sebagai {{ Auth::user()->role }}
-                    </li>
-
-                    <li class="list-group-item">
-                        📅 Tahun Operasional {{ date('Y') }}
-                    </li>
-
-                </ul>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="col-md-6 mb-4">
-
-        <div class="card border-0 shadow-sm h-100">
-
-            <div class="card-header bg-success text-white">
-                Status Sistem
-            </div>
-
-            <div class="card-body">
-
-                <div class="alert alert-success mb-2">
-                    ✓ Sistem berjalan normal
-                </div>
-
-                <div class="alert alert-info mb-2">
-                    ✓ Database terhubung
-                </div>
-
-                <div class="alert alert-primary">
-                    ✓ Siap digunakan untuk transaksi tiket
                 </div>
 
             </div>
@@ -193,8 +75,331 @@
 
     </div>
 
-</div>
-```
+    <!-- Statistik -->
+
+    <div class="row g-4">
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <small class="text-muted">
+                                Total Kapal
+                            </small>
+
+                            <h2 class="fw-bold mt-2 text-primary">
+                                {{ $totalKapal }}
+                            </h2>
+
+                        </div>
+
+                        <div class="bg-primary bg-opacity-10 rounded-circle p-3">
+
+                            <i class="fas fa-ship fa-2x text-primary"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <small class="text-muted">
+                                Total Rute
+                            </small>
+
+                            <h2 class="fw-bold mt-2 text-success">
+                                {{ $totalRute }}
+                            </h2>
+
+                        </div>
+
+                        <div class="bg-success bg-opacity-10 rounded-circle p-3">
+
+                            <i class="fas fa-route fa-2x text-success"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <small class="text-muted">
+                                Total Jadwal
+                            </small>
+
+                            <h2 class="fw-bold mt-2 text-warning">
+                                {{ $totalJadwal }}
+                            </h2>
+
+                        </div>
+
+                        <div class="bg-warning bg-opacity-10 rounded-circle p-3">
+
+                            <i class="fas fa-calendar-alt fa-2x text-warning"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <small class="text-muted">
+                                Total Pemesanan
+                            </small>
+
+                            <h2 class="fw-bold mt-2 text-danger">
+                                {{ $totalPemesanan }}
+                            </h2>
+
+                        </div>
+
+                        <div class="bg-danger bg-opacity-10 rounded-circle p-3">
+
+                            <i class="fas fa-ticket-alt fa-2x text-danger"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Pendapatan -->
+
+    <div class="card border-0 shadow-lg mt-4"
+         style="border-radius:20px;">
+
+        <div class="card-body p-5">
+
+            <div class="row align-items-center">
+
+                <div class="col-md-8">
+
+                    <h6 class="text-muted">
+                        Total Pendapatan
+                    </h6>
+
+                    <h1 class="fw-bold text-success mb-2">
+
+                        Rp {{ number_format($totalPendapatan,0,',','.') }}
+
+                    </h1>
+
+                    <p class="text-muted mb-0">
+
+                        Total akumulasi pembayaran tiket yang telah
+                        berhasil diproses oleh sistem.
+
+                    </p>
+
+                </div>
+
+                <div class="col-md-4 text-end">
+
+                    <i class="fas fa-wallet text-success"
+                       style="font-size:90px;opacity:.18;"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Informasi -->
+
+    <div class="row mt-4">
+
+        <div class="col-lg-7">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-header bg-white border-0">
+
+                    <h5 class="fw-bold mb-0">
+                        Informasi Sistem
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <table class="table table-borderless">
+
+                        <tr>
+                            <td width="40%">Nama Sistem</td>
+                            <td><strong>Sistem Pemesanan Tiket Kapal Ferry</strong></td>
+                        </tr>
+
+                        <tr>
+                            <td>Rute</td>
+                            <td>Ajibata - Tomok</td>
+                        </tr>
+
+                        <tr>
+                            <td>Role Login</td>
+                            <td>{{ ucfirst(Auth::user()->role) }}</td>
+                        </tr>
+
+                        <tr>
+                            <td>Tahun Operasional</td>
+                            <td>{{ date('Y') }}</td>
+                        </tr>
+
+                        <tr>
+                            <td>Status</td>
+                            <td>
+
+                                <span class="badge bg-success">
+                                    Aktif
+                                </span>
+
+                            </td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-5">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-header bg-white border-0">
+
+                    <h5 class="fw-bold mb-0">
+                        Status Sistem
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="d-flex mb-3">
+
+                        <div class="text-success me-3">
+
+                            <i class="fas fa-circle-check fa-2x"></i>
+
+                        </div>
+
+                        <div>
+
+                            <strong>Sistem Berjalan Normal</strong>
+
+                            <div class="text-muted">
+                                Semua layanan aktif.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="d-flex mb-3">
+
+                        <div class="text-primary me-3">
+
+                            <i class="fas fa-database fa-2x"></i>
+
+                        </div>
+
+                        <div>
+
+                            <strong>Database Terhubung</strong>
+
+                            <div class="text-muted">
+                                SQLite Connected.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="d-flex">
+
+                        <div class="text-warning me-3">
+
+                            <i class="fas fa-shield-halved fa-2x"></i>
+
+                        </div>
+
+                        <div>
+
+                            <strong>Keamanan Sistem</strong>
+
+                            <div class="text-muted">
+                                Login Authentication & Role Access.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 
