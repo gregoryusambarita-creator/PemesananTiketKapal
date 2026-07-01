@@ -22,7 +22,7 @@
                     </span>
 
                     <h2 class="fw-bold text-white mb-3">
-                        🚢 Sistem Pemesanan Tiket Kapal Ferry
+                         Sistem Pemesanan Tiket Kapal Ferry
                     </h2>
 
                     <h5 class="text-light mb-4">
