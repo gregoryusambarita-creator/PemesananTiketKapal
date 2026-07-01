@@ -1,127 +1,235 @@
 @extends('layouts.app')
 
+@section('title','Data Jadwal')
+
 @section('content')
 
-<div class="card card-custom">
+<div class="container-fluid">
 
-```
-<div class="card-header d-flex justify-content-between align-items-center">
+    <!-- Header -->
+    <div class="card border-0 shadow-sm mb-4"
+         style="border-radius:20px;
+                background:linear-gradient(135deg,#0f172a,#2563eb);">
 
-    <h5>
-        <i class="fas fa-calendar"></i>
-        Data Jadwal
-    </h5>
+        <div class="card-body d-flex justify-content-between align-items-center text-white">
 
-    <a href="{{ route('jadwal.create') }}"
-       class="btn btn-primary">
+            <div>
 
-        <i class="fas fa-plus"></i>
-        Tambah Jadwal
+                <h2 class="fw-bold mb-2">
+                    <i class="fas fa-calendar-alt me-2"></i>
+                    Data Jadwal Kapal Ferry
+                </h2>
 
-    </a>
+                <p class="mb-0">
+                    Kelola jadwal keberangkatan kapal ferry Ajibata - Tomok.
+                </p>
 
-</div>
+            </div>
 
-<div class="card-body">
+            <a href="{{ route('jadwal.create') }}"
+               class="btn btn-light btn-lg rounded-pill px-4 shadow">
+
+                <i class="fas fa-plus-circle me-2"></i>
+                Tambah Jadwal
+
+            </a>
+
+        </div>
+
+    </div>
 
     @if(session('success'))
-        <div class="alert alert-success">
+
+        <div class="alert alert-success alert-dismissible fade show shadow-sm">
+
+            <i class="fas fa-circle-check me-2"></i>
+
             {{ session('success') }}
+
+            <button class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
         </div>
+
     @endif
 
-    <table class="table table-bordered table-hover">
+    <div class="card border-0 shadow-sm"
+         style="border-radius:20px;">
 
-        <thead class="table-light">
+        <div class="card-body">
 
-            <tr>
-                <th>No</th>
-                <th>Kapal</th>
-                <th>Rute</th>
-                <th>Tanggal</th>
-                <th>Jam</th>
-                <th>Stok Tiket</th>
-                <th>Aksi</th>
-            </tr>
+            <div class="table-responsive">
 
-        </thead>
+                <table class="table align-middle table-hover">
 
-        <tbody>
+                    <thead style="background:#f8fafc;">
 
-        @forelse($jadwals as $jadwal)
+                        <tr class="text-center">
 
-            <tr>
+                            <th>No</th>
+                            <th>Kapal</th>
+                            <th>Rute</th>
+                            <th>Tanggal</th>
+                            <th>Jam</th>
+                            <th>Stok Tiket</th>
+                            <th width="170">Aksi</th>
 
-                <td>{{ $loop->iteration }}</td>
+                        </tr>
 
-                <td>
-                    {{ $jadwal->kapal->nama_kapal }}
-                </td>
+                    </thead>
 
-                <td>
-                    {{ $jadwal->rute->asal }}
-                    -
-                    {{ $jadwal->rute->tujuan }}
-                </td>
+                    <tbody>
 
-                <td>
-                    {{ $jadwal->tanggal_berangkat }}
-                </td>
+                    @forelse($jadwals as $jadwal)
 
-                <td>
-                    {{ $jadwal->jam_berangkat }}
-                </td>
+                        <tr>
 
-                <td>
-                    {{ $jadwal->stok_tiket }}
-                </td>
+                            <td class="text-center fw-bold">
+                                {{ $loop->iteration }}
+                            </td>
 
-                <td>
+                            <td>
 
-                    <a href="{{ route('jadwal.edit',$jadwal->id) }}"
-                       class="btn btn-warning btn-sm">
+                                <i class="fas fa-ship text-primary me-2"></i>
 
-                        <i class="fas fa-edit"></i>
+                                <strong>
+                                    {{ $jadwal->kapal->nama_kapal }}
+                                </strong>
 
-                    </a>
+                            </td>
 
-                    <form action="{{ route('jadwal.destroy',$jadwal->id) }}"
-                          method="POST"
-                          class="d-inline">
+                            <td>
 
-                        @csrf
-                        @method('DELETE')
+                                <span class="badge rounded-pill bg-primary">
 
-                        <button type="submit"
-                                class="btn btn-danger btn-sm"
-                                onclick="return confirm('Yakin ingin menghapus data?')">
+                                    {{ $jadwal->rute->asal }}
 
-                            <i class="fas fa-trash"></i>
+                                </span>
 
-                        </button>
+                                <i class="fas fa-arrow-right mx-2 text-secondary"></i>
 
-                    </form>
+                                <span class="badge rounded-pill bg-success">
 
-                </td>
+                                    {{ $jadwal->rute->tujuan }}
 
-            </tr>
+                                </span>
 
-        @empty
+                            </td>
 
-            <tr>
-                <td colspan="7" class="text-center">
-                    Belum ada data jadwal
-                </td>
-            </tr>
+                            <td>
 
-        @endforelse
+                                <i class="fas fa-calendar text-primary me-2"></i>
 
-        </tbody>
+                                {{ date('d M Y', strtotime($jadwal->tanggal_berangkat)) }}
 
-    </table>
+                            </td>
 
-</div>
-```
+                            <td>
+
+                                <i class="fas fa-clock text-warning me-2"></i>
+
+                                {{ $jadwal->jam_berangkat }}
+
+                            </td>
+
+                            <td>
+
+                                @if($jadwal->stok_tiket > 50)
+
+                                    <span class="badge bg-success rounded-pill px-3">
+
+                                        {{ $jadwal->stok_tiket }} Tiket
+
+                                    </span>
+
+                                @elseif($jadwal->stok_tiket > 20)
+
+                                    <span class="badge bg-warning rounded-pill px-3">
+
+                                        {{ $jadwal->stok_tiket }} Tiket
+
+                                    </span>
+
+                                @else
+
+                                    <span class="badge bg-danger rounded-pill px-3">
+
+                                        {{ $jadwal->stok_tiket }} Tiket
+
+                                    </span>
+
+                                @endif
+
+                            </td>
+
+                            <td class="text-center">
+
+                                <a href="{{ route('jadwal.edit',$jadwal->id) }}"
+                                   class="btn btn-warning rounded-circle me-2"
+                                   title="Edit">
+
+                                    <i class="fas fa-pen"></i>
+
+                                </a>
+
+                                <form action="{{ route('jadwal.destroy',$jadwal->id) }}"
+                                      method="POST"
+                                      class="d-inline">
+
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button class="btn btn-danger rounded-circle"
+                                            title="Hapus"
+                                            onclick="return confirm('Yakin ingin menghapus jadwal ini?')">
+
+                                        <i class="fas fa-trash"></i>
+
+                                    </button>
+
+                                </form>
+
+                            </td>
+
+                        </tr>
+
+                    @empty
+
+                        <tr>
+
+                            <td colspan="7"
+                                class="text-center py-5">
+
+                                <i class="fas fa-calendar-times fa-4x text-secondary mb-3"></i>
+
+                                <h5 class="text-secondary">
+
+                                    Belum Ada Data Jadwal
+
+                                </h5>
+
+                                <p class="text-muted">
+
+                                    Silakan tambahkan jadwal keberangkatan kapal terlebih dahulu.
+
+                                </p>
+
+                            </td>
+
+                        </tr>
+
+                    @endforelse
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 
