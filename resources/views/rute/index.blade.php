@@ -1,111 +1,261 @@
 @extends('layouts.app')
 
+@section('title','Data Rute')
+
 @section('content')
 
-<div class="card card-custom">
+<div class="container-fluid">
 
-```
-<div class="card-header bg-white d-flex justify-content-between align-items-center">
+    <!-- Header -->
+    <div class="card border-0 shadow-sm mb-4"
+         style="border-radius:20px;
+                background:linear-gradient(135deg,#0f172a,#2563eb);">
 
-    <h5 class="mb-0">
-        <i class="fas fa-route text-primary"></i>
-        Data Rute
-    </h5>
+        <div class="card-body d-flex justify-content-between align-items-center flex-wrap">
 
-    <a href="{{ route('rute.create') }}"
-       class="btn btn-primary">
-        <i class="fas fa-plus"></i>
-        Tambah Rute
-    </a>
+            <div class="text-white">
 
-</div>
+                <h2 class="fw-bold mb-2">
+                    <i class="fas fa-route me-2"></i>
+                    Data Rute Ferry
+                </h2>
 
-<div class="card-body">
+                <p class="mb-0 text-light">
+                    Kelola seluruh rute perjalanan kapal ferry pada sistem pemesanan tiket.
+                </p>
 
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
+            </div>
+
+            <div>
+
+                <a href="{{ route('rute.create') }}"
+                   class="btn btn-light rounded-pill px-4 shadow">
+
+                    <i class="fas fa-plus-circle text-primary me-2"></i>
+                    Tambah Rute
+
+                </a>
+
+            </div>
+
         </div>
-    @endif
 
-    <table class="table table-hover">
+    </div>
 
-        <thead class="table-light">
-            <tr>
-                <th>No</th>
-                <th>Asal</th>
-                <th>Tujuan</th>
-                <th>Jarak</th>
-                <th>Harga</th>
-                <th>Status</th>
-                <th width="180">Aksi</th>
-            </tr>
-        </thead>
+    <!-- Table -->
+    <div class="card border-0 shadow-sm"
+         style="border-radius:20px;">
 
-        <tbody>
+        <div class="card-body p-4">
 
-            @forelse($rutes as $rute)
+            @if(session('success'))
 
-            <tr>
+                <div class="alert alert-success alert-dismissible fade show">
 
-                <td>{{ $loop->iteration }}</td>
-                <td>{{ $rute->asal }}</td>
-                <td>{{ $rute->tujuan }}</td>
-                <td>{{ $rute->jarak }} Km</td>
-                <td>Rp {{ number_format($rute->harga,0,',','.') }}</td>
+                    <i class="fas fa-circle-check me-2"></i>
+                    {{ session('success') }}
 
-                <td>
-                    @if($rute->status == 'Aktif')
-                        <span class="badge bg-success">Aktif</span>
-                    @else
-                        <span class="badge bg-danger">Tidak Aktif</span>
-                    @endif
-                </td>
+                    <button class="btn-close"
+                            data-bs-dismiss="alert">
+                    </button>
 
-                <td>
+                </div>
 
-                    <a href="{{ route('rute.edit',$rute->id) }}"
-                       class="btn btn-warning btn-sm">
-                        <i class="fas fa-edit"></i>
-                    </a>
+            @endif
 
-                    <form action="{{ route('rute.destroy',$rute->id) }}"
-                          method="POST"
-                          class="d-inline">
+            <div class="table-responsive">
 
-                        @csrf
-                        @method('DELETE')
+                <table class="table align-middle table-hover">
 
-                        <button type="submit"
-                                class="btn btn-danger btn-sm"
-                                onclick="return confirm('Yakin ingin menghapus data ini?')">
+                    <thead style="background:#f8fafc;">
 
-                            <i class="fas fa-trash"></i>
+                        <tr>
 
-                        </button>
+                            <th width="70">No</th>
 
-                    </form>
+                            <th>
+                                <i class="fas fa-location-dot text-primary me-1"></i>
+                                Asal
+                            </th>
 
-                </td>
+                            <th>
+                                <i class="fas fa-flag-checkered text-success me-1"></i>
+                                Tujuan
+                            </th>
 
-            </tr>
+                            <th width="130">
+                                <i class="fas fa-road text-warning me-1"></i>
+                                Jarak
+                            </th>
 
-            @empty
+                            <th width="170">
+                                <i class="fas fa-money-bill-wave text-success me-1"></i>
+                                Harga Tiket
+                            </th>
 
-            <tr>
-                <td colspan="7" class="text-center">
-                    Belum ada data rute
-                </td>
-            </tr>
+                            <th width="120">
+                                Status
+                            </th>
 
-            @endforelse
+                            <th width="170" class="text-center">
+                                Aksi
+                            </th>
 
-        </tbody>
+                        </tr>
 
-    </table>
+                    </thead>
 
-</div>
-```
+                    <tbody>
+
+                        @forelse($rutes as $rute)
+
+                        <tr>
+
+                            <td>
+
+                                <span class="fw-bold text-primary">
+                                    {{ $loop->iteration }}
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <strong>
+                                    {{ $rute->asal }}
+                                </strong>
+
+                            </td>
+
+                            <td>
+
+                                <strong class="text-success">
+                                    {{ $rute->tujuan }}
+                                </strong>
+
+                            </td>
+
+                            <td>
+
+                                <span class="badge bg-primary rounded-pill px-3 py-2">
+
+                                    {{ $rute->jarak }} Km
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span class="fw-bold text-success">
+
+                                    Rp {{ number_format($rute->harga,0,',','.') }}
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                @if($rute->status=='Aktif')
+
+                                    <span class="badge rounded-pill bg-success px-3">
+
+                                        <i class="fas fa-circle me-1"></i>
+                                        Aktif
+
+                                    </span>
+
+                                @else
+
+                                    <span class="badge rounded-pill bg-danger px-3">
+
+                                        <i class="fas fa-circle me-1"></i>
+                                        Tidak Aktif
+
+                                    </span>
+
+                                @endif
+
+                            </td>
+
+                            <td class="text-center">
+
+                                <a href="{{ route('rute.edit',$rute->id) }}"
+                                   class="btn btn-warning rounded-circle me-1"
+                                   title="Edit">
+
+                                    <i class="fas fa-pen"></i>
+
+                                </a>
+
+                                <form action="{{ route('rute.destroy',$rute->id) }}"
+                                      method="POST"
+                                      class="d-inline">
+
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button
+                                        class="btn btn-danger rounded-circle"
+                                        onclick="return confirm('Yakin ingin menghapus data rute ini?')">
+
+                                        <i class="fas fa-trash"></i>
+
+                                    </button>
+
+                                </form>
+
+                            </td>
+
+                        </tr>
+
+                        @empty
+
+                        <tr>
+
+                            <td colspan="7">
+
+                                <div class="text-center py-5">
+
+                                    <i class="fas fa-route fa-4x text-secondary mb-3"></i>
+
+                                    <h5 class="fw-bold">
+                                        Belum Ada Data Rute
+                                    </h5>
+
+                                    <p class="text-muted">
+
+                                        Silakan tambahkan data rute terlebih dahulu.
+
+                                    </p>
+
+                                    <a href="{{ route('rute.create') }}"
+                                       class="btn btn-primary rounded-pill px-4">
+
+                                        <i class="fas fa-plus-circle me-2"></i>
+
+                                        Tambah Rute
+
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        @endforelse
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 
