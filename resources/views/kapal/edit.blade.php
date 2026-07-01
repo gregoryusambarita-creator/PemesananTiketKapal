@@ -1,73 +1,173 @@
 @extends('layouts.app')
 
+@section('title','Edit Data Kapal')
+
 @section('content')
 
-<div class="card card-custom">
+<div class="container-fluid">
 
-    <div class="card-header">
-        <h5>Edit Data Kapal</h5>
+    <!-- Header -->
+    <div class="card border-0 shadow-sm mb-4"
+         style="border-radius:20px;
+                background:linear-gradient(135deg,#0f172a,#2563eb);">
+
+        <div class="card-body d-flex justify-content-between align-items-center flex-wrap">
+
+            <div class="text-white">
+
+                <h2 class="fw-bold mb-2">
+                    <i class="fas fa-edit me-2"></i>
+                    Edit Data Kapal
+                </h2>
+
+                <p class="mb-0 text-light">
+                    Perbarui informasi kapal yang digunakan pada sistem pemesanan tiket kapal ferry.
+                </p>
+
+            </div>
+
+            <div>
+
+                <a href="{{ route('kapal.index') }}"
+                   class="btn btn-light rounded-pill px-4">
+
+                    <i class="fas fa-arrow-left me-2 text-primary"></i>
+                    Kembali
+
+                </a>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="card-body">
+    <div class="card border-0 shadow-sm"
+         style="border-radius:20px;">
 
-        <form action="{{ route('kapal.update', $kapal->id) }}"
-              method="POST">
+        <div class="card-body p-4">
 
-            @csrf
-            @method('PUT')
+            <form action="{{ route('kapal.update',$kapal->id) }}"
+                  method="POST">
 
-            <div class="mb-3">
-                <label>Nama Kapal</label>
-                <input type="text"
-                       name="nama_kapal"
-                       class="form-control"
-                       value="{{ $kapal->nama_kapal }}">
-            </div>
+                @csrf
+                @method('PUT')
 
-            <div class="mb-3">
-                <label>Kode Kapal</label>
-                <input type="text"
-                       name="kode_kapal"
-                       class="form-control"
-                       value="{{ $kapal->kode_kapal }}">
-            </div>
+                <div class="row">
 
-            <div class="mb-3">
-                <label>Kapasitas</label>
-                <input type="number"
-                       name="kapasitas"
-                       class="form-control"
-                       value="{{ $kapal->kapasitas }}">
-            </div>
+                    <!-- Nama Kapal -->
+                    <div class="col-md-6 mb-4">
 
-            <div class="mb-3">
-                <label>Status</label>
+                        <label class="form-label fw-semibold">
 
-                <select name="status" class="form-control">
+                            <i class="fas fa-ship text-primary me-2"></i>
+                            Nama Kapal
 
-                    <option value="Aktif"
-                        {{ $kapal->status == 'Aktif' ? 'selected' : '' }}>
-                        Aktif
-                    </option>
+                        </label>
 
-                    <option value="Tidak Aktif"
-                        {{ $kapal->status == 'Tidak Aktif' ? 'selected' : '' }}>
-                        Tidak Aktif
-                    </option>
+                        <input
+                            type="text"
+                            name="nama_kapal"
+                            class="form-control form-control-lg"
+                            value="{{ old('nama_kapal',$kapal->nama_kapal) }}"
+                            required>
 
-                </select>
-            </div>
+                    </div>
 
-            <button type="submit" class="btn btn-warning">
-                Update Data
-            </button>
+                    <!-- Kode Kapal -->
+                    <div class="col-md-6 mb-4">
 
-            <a href="{{ route('kapal.index') }}"
-               class="btn btn-secondary">
-                Kembali
-            </a>
+                        <label class="form-label fw-semibold">
 
-        </form>
+                            <i class="fas fa-barcode text-primary me-2"></i>
+                            Kode Kapal
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="kode_kapal"
+                            class="form-control form-control-lg"
+                            value="{{ old('kode_kapal',$kapal->kode_kapal) }}"
+                            required>
+
+                    </div>
+
+                    <!-- Kapasitas -->
+                    <div class="col-md-6 mb-4">
+
+                        <label class="form-label fw-semibold">
+
+                            <i class="fas fa-users text-primary me-2"></i>
+                            Kapasitas Penumpang
+
+                        </label>
+
+                        <input
+                            type="number"
+                            name="kapasitas"
+                            class="form-control form-control-lg"
+                            value="{{ old('kapasitas',$kapal->kapasitas) }}"
+                            required>
+
+                    </div>
+
+                    <!-- Status -->
+                    <div class="col-md-6 mb-4">
+
+                        <label class="form-label fw-semibold">
+
+                            <i class="fas fa-toggle-on text-primary me-2"></i>
+                            Status Kapal
+
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select form-select-lg">
+
+                            <option value="Aktif"
+                                {{ $kapal->status=='Aktif' ? 'selected' : '' }}>
+                                Aktif
+                            </option>
+
+                            <option value="Tidak Aktif"
+                                {{ $kapal->status=='Tidak Aktif' ? 'selected' : '' }}>
+                                Tidak Aktif
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <hr class="my-4">
+
+                <div class="d-flex justify-content-end gap-3">
+
+                    <a href="{{ route('kapal.index') }}"
+                       class="btn btn-secondary btn-lg rounded-pill px-4">
+
+                        <i class="fas fa-times me-2"></i>
+                        Batal
+
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary btn-lg rounded-pill px-5 shadow">
+
+                        <i class="fas fa-save me-2"></i>
+                        Simpan Perubahan
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
 
     </div>
 
