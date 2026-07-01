@@ -1,162 +1,227 @@
 @extends('layouts.app')
 
+@section('title','Data Pemesanan')
+
 @section('content')
 
-<div class="card card-custom">
+<div class="container-fluid">
 
-```
-<div class="card-header bg-white d-flex justify-content-between align-items-center">
+    <!-- Header -->
+    <div class="card border-0 shadow-sm mb-4"
+         style="border-radius:20px;background:linear-gradient(135deg,#0f172a,#2563eb);">
 
-    <h5 class="mb-0">
-        <i class="fas fa-ticket-alt text-primary"></i>
-        Data Pemesanan
-    </h5>
+        <div class="card-body text-white d-flex justify-content-between align-items-center">
 
-    <a href="{{ route('pemesanan.create') }}"
-       class="btn btn-primary">
+            <div>
 
-        <i class="fas fa-plus"></i>
-        Tambah Pemesanan
+                <h2 class="fw-bold mb-2">
+                    <i class="fas fa-ticket-alt me-2"></i>
+                    Data Pemesanan Tiket
+                </h2>
 
-    </a>
+                <p class="mb-0">
+                    Kelola seluruh transaksi pemesanan tiket kapal ferry.
+                </p>
 
-</div>
+            </div>
 
-<div class="card-body">
+            <a href="{{ route('pemesanan.create') }}"
+               class="btn btn-light rounded-pill px-4 shadow">
+
+                <i class="fas fa-plus-circle me-2 text-primary"></i>
+                Tambah Pemesanan
+
+            </a>
+
+        </div>
+
+    </div>
 
     @if(session('success'))
 
-        <div class="alert alert-success">
+        <div class="alert alert-success alert-dismissible fade show shadow-sm">
+
+            <i class="fas fa-circle-check me-2"></i>
+
             {{ session('success') }}
+
+            <button class="btn-close"
+                    data-bs-dismiss="alert"></button>
+
         </div>
 
     @endif
 
-    <div class="table-responsive">
+    <div class="card border-0 shadow-sm"
+         style="border-radius:20px;">
 
-        <table class="table table-hover align-middle">
+        <div class="card-body p-0">
 
-            <thead class="table-light">
+            <div class="table-responsive">
 
-                <tr>
-                    <th>No</th>
-                    <th>Penumpang</th>
-                    <th>Jadwal</th>
-                    <th>Jumlah Tiket</th>
-                    <th>Total Harga</th>
-                    <th>Status</th>
-                    <th width="180">Aksi</th>
-                </tr>
+                <table class="table table-hover align-middle mb-0">
 
-            </thead>
+                    <thead style="background:#f8fafc;">
 
-            <tbody>
+                        <tr class="text-center">
 
-            @forelse($pemesanans as $pemesanan)
+                            <th width="70">No</th>
+                            <th>Penumpang</th>
+                            <th>Rute</th>
+                            <th width="120">Jumlah</th>
+                            <th width="170">Total Harga</th>
+                            <th width="130">Status</th>
+                            <th width="170">Aksi</th>
 
-            <tr>
+                        </tr>
 
-                <td>{{ $loop->iteration }}</td>
+                    </thead>
 
-                <td>
-                    <strong>{{ $pemesanan->nama_penumpang }}</strong>
-                    <br>
-                    <small>{{ $pemesanan->telepon }}</small>
-                </td>
+                    <tbody>
 
-                <td>
-                    {{ $pemesanan->jadwal->rute->asal }}
-                    -
-                    {{ $pemesanan->jadwal->rute->tujuan }}
-                </td>
+                        @forelse($pemesanans as $pemesanan)
 
-                <td>
-                    {{ $pemesanan->jumlah_tiket }}
-                </td>
+                        <tr>
 
-                <td>
-                    Rp {{ number_format($pemesanan->total_harga,0,',','.') }}
-                </td>
+                            <td class="text-center fw-bold">
+                                {{ $loop->iteration }}
+                            </td>
 
-                <td>
+                            <td>
 
-                    @if($pemesanan->status == 'Lunas')
+                                <div class="fw-semibold">
+                                    {{ $pemesanan->nama_penumpang }}
+                                </div>
 
-                        <span class="badge bg-success">
-                            Lunas
-                        </span>
+                                <small class="text-muted">
 
-                    @elseif($pemesanan->status == 'Batal')
+                                    <i class="fas fa-phone me-1"></i>
 
-                        <span class="badge bg-danger">
-                            Batal
-                        </span>
+                                    {{ $pemesanan->telepon }}
 
-                    @else
+                                </small>
 
-                        <span class="badge bg-warning">
-                            Menunggu
-                        </span>
+                            </td>
 
-                    @endif
+                            <td>
 
-                </td>
+                                <span class="badge bg-primary-subtle text-primary border">
 
-                <td>
+                                    {{ $pemesanan->jadwal->rute->asal }}
 
-                    <a href="{{ route('pemesanan.edit',$pemesanan->id) }}"
-                       class="btn btn-warning btn-sm">
+                                    <i class="fas fa-arrow-right mx-1"></i>
 
-                        <i class="fas fa-edit"></i>
+                                    {{ $pemesanan->jadwal->rute->tujuan }}
 
-                    </a>
+                                </span>
 
-                    <form action="{{ route('pemesanan.destroy',$pemesanan->id) }}"
-                          method="POST"
-                          class="d-inline">
+                            </td>
 
-                        @csrf
-                        @method('DELETE')
+                            <td class="text-center">
 
-                        <button type="submit"
-                                class="btn btn-danger btn-sm"
-                                onclick="return confirm('Yakin ingin menghapus data ini?')">
+                                <span class="badge bg-info text-dark px-3 py-2">
 
-                            <i class="fas fa-trash"></i>
+                                    {{ $pemesanan->jumlah_tiket }} Tiket
 
-                        </button>
+                                </span>
 
-                    </form>
+                            </td>
 
-                </td>
+                            <td class="fw-bold text-success">
 
-            </tr>
+                                Rp {{ number_format($pemesanan->total_harga,0,',','.') }}
 
-            @empty
+                            </td>
 
-            <tr>
+                            <td class="text-center">
 
-                <td colspan="7" class="text-center text-muted py-4">
+                                @if($pemesanan->status=='Lunas')
 
-                    <i class="fas fa-ticket-alt fa-2x mb-2"></i>
-                    <br>
+                                    <span class="badge bg-success px-3 py-2">
+                                        <i class="fas fa-check-circle me-1"></i>
+                                        Lunas
+                                    </span>
 
-                    Belum ada data pemesanan
+                                @elseif($pemesanan->status=='Batal')
 
-                </td>
+                                    <span class="badge bg-danger px-3 py-2">
+                                        <i class="fas fa-times-circle me-1"></i>
+                                        Batal
+                                    </span>
 
-            </tr>
+                                @else
 
-            @endforelse
+                                    <span class="badge bg-warning text-dark px-3 py-2">
+                                        <i class="fas fa-clock me-1"></i>
+                                        Menunggu
+                                    </span>
 
-            </tbody>
+                                @endif
 
-        </table>
+                            </td>
+
+                            <td class="text-center">
+
+                                <a href="{{ route('pemesanan.edit',$pemesanan->id) }}"
+                                   class="btn btn-warning rounded-circle me-1"
+                                   title="Edit">
+
+                                    <i class="fas fa-pen"></i>
+
+                                </a>
+
+                                <form action="{{ route('pemesanan.destroy',$pemesanan->id) }}"
+                                      method="POST"
+                                      class="d-inline">
+
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit"
+                                            class="btn btn-danger rounded-circle"
+                                            onclick="return confirm('Yakin ingin menghapus data ini?')">
+
+                                        <i class="fas fa-trash"></i>
+
+                                    </button>
+
+                                </form>
+
+                            </td>
+
+                        </tr>
+
+                        @empty
+
+                        <tr>
+
+                            <td colspan="7" class="text-center py-5">
+
+                                <i class="fas fa-ticket-alt fa-4x text-secondary mb-3"></i>
+
+                                <h5 class="text-muted">
+                                    Belum Ada Data Pemesanan
+                                </h5>
+
+                                <p class="text-muted">
+                                    Silakan tambahkan data pemesanan terlebih dahulu.
+                                </p>
+
+                            </td>
+
+                        </tr>
+
+                        @endforelse
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
 
     </div>
-
-</div>
-```
 
 </div>
 
